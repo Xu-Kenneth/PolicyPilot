@@ -14,7 +14,7 @@ from typing import Dict, List, Any
 import io
 
 # Configuration
-API_BASE_URL = st.secrets.get("API_BASE_URL", "http://localhost:8000")
+API_BASE_URL = st.secrets.get("API_BASE_URL", "https://policypilot-production-1603.up.railway.app")
 
 # Page configuration
 st.set_page_config(
