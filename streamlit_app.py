@@ -12,9 +12,15 @@ import pandas as pd
 from datetime import datetime
 from typing import Dict, List, Any
 import io
+import os
 
-# Configuration
-API_BASE_URL = st.secrets.get("API_BASE_URL", "https://policypilot-production-1603.up.railway.app")
+# Configuration - Get API URL from environment with fallback logic
+# Priority: Environment Variable > Streamlit Secrets > Local Development
+API_BASE_URL = (
+    os.getenv("API_BASE_URL") or  # Railway/Cloud environment variable
+    st.secrets.get("API_BASE_URL", None) or  # Local development with secrets
+    "http://localhost:8000"  # Local development fallback
+)
 
 # Page configuration
 st.set_page_config(

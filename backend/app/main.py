@@ -2,6 +2,7 @@
 Main FastAPI application for PolicyPilot backend.
 """
 import uuid
+import os
 from pathlib import Path
 from typing import List
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
@@ -33,16 +34,35 @@ app = FastAPI(
     openapi_url="/api/openapi.json"
 )
 
+# Determine CORS origins based on environment
+def get_cors_origins() -> List[str]:
+    """Get CORS origins based on environment."""
+    # Get environment (dev, staging, production)
+    env = os.getenv("ENVIRONMENT", "development").lower()
+    
+    if env == "production":
+        # In production on Railway, accept requests from Railway hosts
+        return [
+            os.getenv("FRONTEND_URL", "https://policypilot-frontend.up.railway.app"),
+            "https://policypilot-frontend.up.railway.app",
+            "https://*.up.railway.app",
+        ]
+    else:
+        # In development, be permissive
+        return [
+            "http://localhost:3000",      # React dev server
+            "http://localhost:5173",      # Vite dev server
+            "http://localhost:8501",      # Streamlit dev server
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:8501",
+            "*"                           # Allow all for development
+        ]
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",      # React dev server
-        "http://localhost:5173",      # Vite dev server
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "*"                           # Allow all for development (configure for production)
-    ],
+    allow_origins=get_cors_origins(),
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization", "Accept"],

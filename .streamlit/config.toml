@@ -1,3 +1,5 @@
+# Streamlit Configuration
+
 [theme]
 primaryColor = "#667eea"
 backgroundColor = "#ffffff"
@@ -8,3 +10,11 @@ font = "sans serif"
 [server]
 enableCORS = false
 enableXsrfProtection = true
+# Port configuration for local development (Railway uses $PORT env var)
+port = 8501
+
+[client]
+showErrorDetails = true
+
+[logger]
+level = "debug"
