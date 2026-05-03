@@ -103,6 +103,9 @@ class AnalysisResult(BaseModel):
     
     # All issues
     all_issues: List[Issue] = []
+    
+    # Report identifier for frontend download endpoint
+    upload_id: Optional[str] = None
 
 
 class UploadResponse(BaseModel):

@@ -28,13 +28,14 @@ class ScoringEngine:
         self.pass_threshold = settings.pass_threshold
         self.warning_threshold = settings.warning_threshold
     
-    def analyze_project(self, directory: Path, project_name: str) -> AnalysisResult:
+    def analyze_project(self, directory: Path, project_name: str, upload_id: str | None = None) -> AnalysisResult:
         """
         Perform complete project analysis.
         
         Args:
             directory: Project directory to analyze
             project_name: Name of the project
+            upload_id: Optional upload identifier for report downloads
             
         Returns:
             Complete analysis results
@@ -77,7 +78,8 @@ class ScoringEngine:
             total_issues=len(all_issues),
             critical_issues=critical_issues,
             files_analyzed=files_analyzed,
-            all_issues=all_issues
+            all_issues=all_issues,
+            upload_id=upload_id
         )
     
     def _calculate_module_scores(

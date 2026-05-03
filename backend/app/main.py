@@ -36,10 +36,18 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=[
+        "http://localhost:3000",      # React dev server
+        "http://localhost:5173",      # Vite dev server
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "*"                           # Allow all for development (configure for production)
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
+    expose_headers=["Content-Disposition"],  # For file downloads
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 
@@ -124,7 +132,8 @@ async def analyze_project(request: AnalysisRequest, background_tasks: Background
         # Run analysis
         result = scoring_engine.analyze_project(
             directory=upload_path,
-            project_name=request.project_name or "Unnamed Project"
+            project_name=request.project_name or "Unnamed Project",
+            upload_id=request.upload_id
         )
         
         # Generate reports in background
@@ -168,7 +177,8 @@ async def upload_and_analyze(
         # Run analysis
         result = scoring_engine.analyze_project(
             directory=upload_path,
-            project_name=project_name
+            project_name=project_name,
+            upload_id=upload_id
         )
         
         # Generate reports
