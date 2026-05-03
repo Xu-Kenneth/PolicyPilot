@@ -1,10 +1,2 @@
 [build]
-builder = "dockerfile"
-
-[[services]]
-name = "backend"
-startCommand = "cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
-
-[[services]]
-name = "frontend" 
-startCommand = "streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0"
+builder = "docker-compose"
